@@ -1,0 +1,24 @@
+{
+  "name": "codomax-fullstack-internship",
+  "version": "1.0.0",
+  "description": "Projects and daily tasks completed during the Codomax Full Stack Development Internship",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swagath088/codomax-fullstack-internship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/swagath088/codomax-fullstack-internship/issues"
+  },
+  "homepage": "https://github.com/swagath088/codomax-fullstack-internship#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
