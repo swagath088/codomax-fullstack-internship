@@ -2,26 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog Management System</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Blog Management System</h1>
 
-  <!-- Form for Adding / Editing Blogs -->
-  <div class="form-container">
-    <h3 id="form-heading">Add New Blog</h3>
-    <input type="hidden" id="blog-id">
-    <input type="text" id="blog-title" placeholder="Blog Title" required>
-    <input type="text" id="blog-author" placeholder="Author Name" required>
-    <button id="save-btn" onclick="saveBlog()">Add Blog</button>
+  <div class="app-container">
+    <header class="header">
+      <h1 class="animated-title">Blog Management System</h1>
+      <p class="subtitle">Day 11 — Interactive UI with Animations & Transitions</p>
+    </header>
+
+    <!-- Form Section -->
+    <div class="card form-card">
+      <h3 id="form-heading">Add New Blog</h3>
+      <form id="blog-form" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="blog-id">
+        
+        <div class="input-group">
+          <input type="text" id="blog-title" placeholder="Blog Title" required autocomplete="off">
+        </div>
+        
+        <div class="input-group">
+          <input type="text" id="blog-author" placeholder="Author Name" required autocomplete="off">
+        </div>
+
+        <div class="button-group">
+          <button type="submit" id="save-btn" class="btn btn-primary">
+            <span>Add Blog</span>
+          </button>
+          <button type="button" id="cancel-btn" class="btn btn-secondary" onclick="resetForm()" style="display: none;">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Blogs Section -->
+    <div class="blogs-header">
+      <h3>All Blogs (<span id="blog-count">0</span>)</h3>
+      <a href="#blogs-container" class="scroll-link">↓ Scroll to List</a>
+    </div>
+
+    <!-- Scrollable Blog Container with Custom Scrollbar -->
+    <div id="blogs-container" class="scrollable-container">
+      <ul id="blogs-list"></ul>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" onclick="scrollToTop()">↑ Top</button>
   </div>
-
-  <hr>
-
-  <!-- Section to Render All Blogs -->
-  <h3>All Blogs</h3>
-  <ul id="blogs-list"></ul>
 
   <script src="script.js"></script>
 </body>
