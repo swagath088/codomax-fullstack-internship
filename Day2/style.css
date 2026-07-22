@@ -2,23 +2,36 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,sans-serif;
+    font-family:'Segoe UI',sans-serif;
 }
 
 body{
     background:#f5f5f5;
+    color:#222;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
 }
+
+main{
+    flex:1;
+}
+
+/* ================= NAVBAR ================= */
 
 nav{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:20px;
-    background:#333;
+    background:#111;
+    padding:15px 45px;
+    box-shadow:0 3px 10px rgba(0,0,0,.2);
 }
 
 nav h2{
-    color:white;
+    color:#FFD700;
+    font-size:30px;
+    font-weight:bold;
 }
 
 nav ul{
@@ -27,25 +40,147 @@ nav ul{
 }
 
 nav ul li{
-    margin-left:20px;
+    margin-left:25px;
 }
 
 nav ul li a{
-    color:white;
     text-decoration:none;
+    color:white;
+    font-size:17px;
+    font-weight:600;
+    transition:.3s;
 }
 
-main{
-    padding:50px;
-    text-align:center;
+nav ul li a:hover{
+    color:#FFD700;
 }
+
+/* ================= HERO ================= */
+
+.hero{
+    text-align:center;
+    padding:30px 20px 20px;
+}
+
+.hero h1{
+    font-size:42px;
+    color:#111;
+    margin-bottom:10px;
+}
+
+.hero p{
+    color:#555;
+    font-size:18px;
+    margin-bottom:20px;
+}
+
+/* ================= BUTTON ================= */
+
+button{
+    background:#FFD700;
+    color:#111;
+    border:none;
+    padding:12px 30px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+button:hover{
+    background:#111;
+    color:#FFD700;
+    transform:translateY(-3px);
+}
+
+/* ================= CONTACT ================= */
+
+.contact{
+    width:380px;
+    margin:10px auto 20px;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+.contact h2{
+    text-align:center;
+    color:#111;
+    margin-bottom:15px;
+}
+
+input,
+textarea{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border:2px solid #ddd;
+    border-radius:6px;
+    font-size:15px;
+    transition:.3s;
+}
+
+input:focus,
+textarea:focus{
+    outline:none;
+    border-color:#FFD700;
+}
+
+textarea{
+    height:70px;
+    resize:none;
+}
+
+/* ================= BLOG ================= */
+
+main h1{
+    text-align:center;
+    margin:25px 0;
+    font-size:40px;
+    color:#111;
+}
+
+.blog-container{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    width:300px;
+    padding:25px;
+    border-radius:12px;
+    border-top:5px solid #FFD700;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    text-align:center;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 10px 20px rgba(0,0,0,.25);
+}
+
+.card h2{
+    margin-bottom:12px;
+}
+
+.card p{
+    color:#555;
+    margin-bottom:20px;
+}
+
+/* ================= FOOTER ================= */
 
 footer{
-    background:#333;
-    color:white;
+    background:#111;
+    color:#FFD700;
     text-align:center;
-    padding:20px;
-    position:fixed;
-    width:100%;
-    bottom:0;
+    padding:15px;
+    font-weight:600;
 }
