@@ -184,3 +184,9 @@ footer{
     padding:15px;
     font-weight:600;
 }
+#message{
+    margin-top:15px;
+    font-size:18px;
+    font-weight:bold;
+    text-align:center;
+}
