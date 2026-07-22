@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/swagath088/codomax-fullstack-internship#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^4.21.2"
   }
 }

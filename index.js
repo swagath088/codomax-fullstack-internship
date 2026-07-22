@@ -1,125 +1,84 @@
 const express = require("express");
-
 const app = express();
 const PORT = 3000;
 
+// Enable JSON body parsing middleware
 app.use(express.json());
 
-// Store blogs
-const blogs = [];
+// In-memory blog storage
+let blogs = [
+  { id: 1, title: "Original Blog Title", author: "Author Name" },
+  { id: 2, title: "Second Blog Post", author: "Jane Doe" }
+];
 
-// Home Page
+// 1. Root route (Fixes "Cannot GET /" in browser)
 app.get("/", (req, res) => {
-
-    let html = `
-    <html>
-    <head>
-        <title>Codomax Blog</title>
-
-        <style>
-            body{
-                font-family:Arial;
-                background:#f4f4f4;
-                padding:40px;
-            }
-
-            h1{
-                color:#333;
-            }
-
-            .card{
-                background:white;
-                padding:20px;
-                margin:15px 0;
-                border-radius:8px;
-                box-shadow:0 2px 8px rgba(0,0,0,.2);
-            }
-        </style>
-
-    </head>
-
-    <body>
-
-    <h1>All Blog Posts</h1>
-    `;
-
-    blogs.forEach(blog => {
-
-        html += `
-        <div class="card">
-
-            <h2>${blog.title}</h2>
-
-            <p>
-                <strong>Author:</strong>
-                ${blog.author}
-            </p>
-
-        </div>
-        `;
-
-    });
-
-    if(blogs.length===0){
-
-        html += "<p>No blogs available.</p>";
-
-    }
-
-    html += `
-    </body>
-    </html>
-    `;
-
-    res.send(html);
-
+  res.send("Welcome to the Blog API Server!");
 });
 
-// View blogs as JSON
-app.get("/blogs",(req,res)=>{
-
-    res.json(blogs);
-
+// 2. GET: Fetch all blogs
+app.get("/blogs", (req, res) => {
+  res.json(blogs);
 });
 
-// Add Blog
-app.post("/blogs",(req,res)=>{
+// 3. GET: Fetch a single blog by ID
+app.get("/blogs/:id", (req, res) => {
+  const blogId = parseInt(req.params.id);
+  const blog = blogs.find((b) => b.id === blogId);
 
-    const {title,author}=req.body;
+  if (!blog) {
+    return res.status(404).json({ message: "Blog post not found" });
+  }
 
-    if(!title || !author){
-
-        return res.status(400).json({
-
-            success:false,
-            message:"Title and Author are required."
-
-        });
-
-    }
-
-    const newBlog={
-
-        id:blogs.length+1,
-        title,
-        author
-
-    };
-
-    blogs.push(newBlog);
-
-    res.status(201).json({
-
-        success:true,
-        message:"Blog created successfully!",
-        blog:newBlog
-
-    });
-
+  res.json(blog);
 });
 
-app.listen(PORT,()=>{
+// 4. POST: Create a new blog post
+app.post("/blogs", (req, res) => {
+  const { title, author } = req.body;
 
-    console.log(`Server running on http://localhost:${PORT}`);
+  if (!title || !author) {
+    return res.status(400).json({ message: "Title and Author are required" });
+  }
 
+  const newBlog = {
+    id: blogs.length + 1,
+    title: title,
+    author: author
+  };
+
+  blogs.push(newBlog);
+  console.log("POST ROUTE HIT - New Blog:", newBlog);
+
+  res.status(201).json({
+    message: "Blog created successfully!",
+    blog: newBlog
+  });
+});
+
+// 5. PUT: Edit / Update an existing blog post (Day 8 Task)
+app.put("/blogs/:id", (req, res) => {
+  const blogId = parseInt(req.params.id);
+  const { title, author } = req.body;
+
+  const blogIndex = blogs.findIndex((b) => b.id === blogId);
+
+  if (blogIndex === -1) {
+    return res.status(404).json({ message: "Blog post not found to update" });
+  }
+
+  if (title) blogs[blogIndex].title = title;
+  if (author) blogs[blogIndex].author = author;
+
+  console.log("PUT ROUTE HIT - Updated Blog:", blogs[blogIndex]);
+
+  res.status(200).json({
+    message: "Blog updated successfully!",
+    updatedBlog: blogs[blogIndex]
+  });
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
