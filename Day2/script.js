@@ -1,19 +1,33 @@
 const API_URL = "http://localhost:3000/blogs";
 
+// Default initial data for live GitHub Pages preview
+let localBlogs = [
+  { id: 1, title: "Welcome to the Full-Stack Blog", author: "Gaddam Swagath" },
+  { id: 2, title: "Mastering Express & REST APIs", author: "Jane Doe" }
+];
+
 document.addEventListener("DOMContentLoaded", fetchBlogs);
 
-// 1. GET: Fetch all blogs
+// 1. GET: Fetch blogs from API with localStorage fallback
 async function fetchBlogs() {
   try {
     const res = await fetch(API_URL);
+    if (!res.ok) throw new Error("Server response not ok");
     const blogs = await res.json();
     displayBlogs(blogs);
   } catch (err) {
-    console.error("Error fetching blogs:", err);
+    // Fallback to localStorage for GitHub Pages live demo
+    const stored = localStorage.getItem("blogs");
+    if (stored) {
+      localBlogs = JSON.parse(stored);
+    } else {
+      localStorage.setItem("blogs", JSON.stringify(localBlogs));
+    }
+    displayBlogs(localBlogs);
   }
 }
 
-// Render Blogs with Animation Class
+// 2. Render Blogs List
 function displayBlogs(blogs) {
   const list = document.getElementById("blogs-list");
   const countEl = document.getElementById("blog-count");
@@ -33,7 +47,7 @@ function displayBlogs(blogs) {
         <h4>${escapeHTML(blog.title)}</h4>
         <p>By <em>${escapeHTML(blog.author)}</em></p>
       </div>
-      <div style="display: flex; gap: 8px;">
+      <div class="card-actions">
         <button class="btn btn-edit" onclick="prepareEdit(${blog.id}, '${escapeQuote(blog.title)}', '${escapeQuote(blog.author)}')">Edit</button>
         <button class="btn btn-delete" onclick="deleteBlog(${blog.id})">Delete</button>
       </div>
@@ -42,7 +56,7 @@ function displayBlogs(blogs) {
   });
 }
 
-// 2. Handle Form Submit (POST / PUT)
+// 3. Handle Form Submit (POST / PUT)
 async function handleFormSubmit(event) {
   event.preventDefault();
 
@@ -56,29 +70,40 @@ async function handleFormSubmit(event) {
 
   try {
     if (id) {
-      // PUT
+      // PUT Request
       await fetch(`${API_URL}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
     } else {
-      // POST
+      // POST Request
       await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
     }
-
-    resetForm();
-    await fetchBlogs();
   } catch (err) {
-    console.error("Error saving blog:", err);
+    // Fallback logic for LocalStorage
+    if (id) {
+      const idx = localBlogs.findIndex((b) => b.id === parseInt(id));
+      if (idx !== -1) {
+        localBlogs[idx].title = title;
+        localBlogs[idx].author = author;
+      }
+    } else {
+      const newId = localBlogs.length ? localBlogs[localBlogs.length - 1].id + 1 : 1;
+      localBlogs.push({ id: newId, title, author });
+    }
+    localStorage.setItem("blogs", JSON.stringify(localBlogs));
   }
+
+  resetForm();
+  await fetchBlogs();
 }
 
-// Prepare Edit
+// Prepare Edit State
 function prepareEdit(id, title, author) {
   document.getElementById("blog-id").value = id;
   document.getElementById("blog-title").value = title;
@@ -86,23 +111,23 @@ function prepareEdit(id, title, author) {
   
   document.getElementById("form-heading").innerText = "Edit Blog";
   document.getElementById("save-btn").querySelector("span").innerText = "Update Blog";
-  document.getElementById("cancel-btn").style.display = "inline-block";
+  document.getElementById("cancel-btn").style.display = "inline-flex";
 
-  // Smooth scroll to form
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// 3. DELETE: Remove blog
+// 4. DELETE: Remove blog
 async function deleteBlog(id) {
   try {
     await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-    fetchBlogs();
   } catch (err) {
-    console.error("Error deleting blog:", err);
+    localBlogs = localBlogs.filter((b) => b.id !== id);
+    localStorage.setItem("blogs", JSON.stringify(localBlogs));
   }
+  fetchBlogs();
 }
 
-// Reset Form
+// Reset Form State
 function resetForm() {
   document.getElementById("blog-id").value = "";
   document.getElementById("blog-title").value = "";
@@ -112,7 +137,7 @@ function resetForm() {
   document.getElementById("cancel-btn").style.display = "none";
 }
 
-// Smooth Scroll Helper
+// Smooth Scroll to Top
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
