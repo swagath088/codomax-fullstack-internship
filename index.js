@@ -7,11 +7,11 @@ app.use(express.json());
 
 // In-memory blog storage
 let blogs = [
-  { id: 1, title: "Original Blog Title", author: "Author Name" },
+  { id: 1, title: "Original Blog Title", author: "Gaddam Swagath" },
   { id: 2, title: "Second Blog Post", author: "Jane Doe" }
 ];
 
-// 1. Root route (Fixes "Cannot GET /" in browser)
+// 1. Root route
 app.get("/", (req, res) => {
   res.send("Welcome to the Blog API Server!");
 });
@@ -42,7 +42,7 @@ app.post("/blogs", (req, res) => {
   }
 
   const newBlog = {
-    id: blogs.length + 1,
+    id: blogs.length ? blogs[blogs.length - 1].id + 1 : 1,
     title: title,
     author: author
   };
@@ -75,6 +75,25 @@ app.put("/blogs/:id", (req, res) => {
   res.status(200).json({
     message: "Blog updated successfully!",
     updatedBlog: blogs[blogIndex]
+  });
+});
+
+// 6. DELETE: Delete a blog post by ID (Day 9 Task)
+app.delete("/blogs/:id", (req, res) => {
+  const blogId = parseInt(req.params.id);
+  const blogIndex = blogs.findIndex((b) => b.id === blogId);
+
+  if (blogIndex === -1) {
+    return res.status(404).json({ message: "Blog post not found to delete" });
+  }
+
+  const deletedBlog = blogs.splice(blogIndex, 1)[0];
+  console.log("DELETE ROUTE HIT - Deleted Blog:", deletedBlog);
+
+  res.status(200).json({
+    message: "Blog deleted successfully!",
+    deletedBlog: deletedBlog,
+    remainingBlogs: blogs
   });
 });
 
